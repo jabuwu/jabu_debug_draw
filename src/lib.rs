@@ -1,4 +1,4 @@
-use std::mem::take;
+use std::{cmp::Ordering, mem::take};
 
 use bevy::{
     prelude::*,
@@ -38,6 +38,7 @@ pub trait DebugDrawDrawable {
 pub struct DebugDrawMesh {
     pub vertices: Vec<DebugDrawVertex>,
     pub indices: Vec<u32>,
+    pub depth: f32,
 }
 
 impl DebugDrawMesh {
@@ -75,11 +76,16 @@ fn debug_renderer(
     }
 
     let mut merged_mesh = DebugDrawMesh::new();
+    debug_render
+        .meshes
+        .sort_by(|a, b| a.depth.partial_cmp(&b.depth).unwrap_or(Ordering::Equal));
     for debug_render_mesh in take(&mut debug_render.meshes).into_iter() {
         merged_mesh.merge_with(&debug_render_mesh);
     }
 
-    let DebugDrawMesh { vertices, indices } = merged_mesh;
+    let DebugDrawMesh {
+        vertices, indices, ..
+    } = merged_mesh;
 
     let mut mesh = Mesh::new(PrimitiveTopology::TriangleList);
 

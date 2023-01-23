@@ -8,6 +8,7 @@ pub struct DebugDrawRectangle {
     pub size: Vec2,
     pub rotation: f32,
     pub color: Color,
+    pub depth: f32,
 }
 
 impl Default for DebugDrawRectangle {
@@ -17,6 +18,7 @@ impl Default for DebugDrawRectangle {
             size: Vec2::ZERO,
             rotation: 0.,
             color: Color::BLACK,
+            depth: 0.,
         }
     }
 }
@@ -44,6 +46,7 @@ impl DebugDrawDrawable for DebugDrawRectangle {
                 },
             ],
             indices: vec![0, 1, 2, 3, 2, 1],
+            depth: self.depth,
         }
     }
 }

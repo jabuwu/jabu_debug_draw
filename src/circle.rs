@@ -11,6 +11,7 @@ pub struct DebugDrawCircle {
     pub segments: u8,
     pub rotation: f32,
     pub color: Color,
+    pub depth: f32,
 }
 
 impl Default for DebugDrawCircle {
@@ -21,6 +22,7 @@ impl Default for DebugDrawCircle {
             segments: 64,
             rotation: 0.,
             color: Color::BLACK,
+            depth: 0.,
         }
     }
 }
@@ -43,6 +45,10 @@ impl DebugDrawDrawable for DebugDrawCircle {
             position: self.position,
             color: self.color,
         });
-        DebugDrawMesh { vertices, indices }
+        DebugDrawMesh {
+            vertices,
+            indices,
+            depth: self.depth,
+        }
     }
 }

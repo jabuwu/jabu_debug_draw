@@ -9,6 +9,7 @@ pub struct DebugDrawLine {
     pub start_color: Color,
     pub end_color: Color,
     pub thickness: f32,
+    pub depth: f32,
 }
 
 impl Default for DebugDrawLine {
@@ -19,6 +20,7 @@ impl Default for DebugDrawLine {
             start_color: Color::BLACK,
             end_color: Color::BLACK,
             thickness: 1.,
+            depth: 0.,
         }
     }
 }
@@ -49,6 +51,7 @@ impl DebugDrawDrawable for DebugDrawLine {
                     },
                 ],
                 indices: vec![0, 1, 2, 3, 2, 1],
+                depth: self.depth,
             }
         }
     }
