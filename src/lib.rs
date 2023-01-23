@@ -44,6 +44,14 @@ impl DebugDrawMesh {
     pub fn new() -> Self {
         Self::default()
     }
+
+    pub fn merge_with(&mut self, other: &DebugDrawMesh) {
+        let base_index = self.vertices.len() as u32;
+        self.vertices.extend(other.vertices.iter());
+        for index in other.indices.iter() {
+            self.indices.push(base_index + *index);
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -65,45 +73,49 @@ fn debug_renderer(
     for debug_entity in debug_query.iter() {
         commands.entity(debug_entity).despawn();
     }
+
+    let mut merged_mesh = DebugDrawMesh::new();
     for debug_render_mesh in take(&mut debug_render.meshes).into_iter() {
-        let DebugDrawMesh { vertices, indices } = debug_render_mesh;
-
-        let mut mesh = Mesh::new(PrimitiveTopology::TriangleList);
-
-        let mut positions: Vec<[f32; 3]> = vec![];
-        let mut normals: Vec<[f32; 3]> = vec![];
-        let mut uvs: Vec<[f32; 2]> = vec![];
-        let mut colors: Vec<[f32; 4]> = vec![];
-
-        for vertex in vertices.iter() {
-            positions.push([vertex.position.x, vertex.position.y, 1.]);
-            normals.push([0., 0., 0.]);
-            uvs.push([0., 0.]);
-            colors.push([
-                vertex.color.r(),
-                vertex.color.g(),
-                vertex.color.b(),
-                vertex.color.a(),
-            ]);
-        }
-
-        mesh.set_indices(Some(Indices::U32(indices)));
-        mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, positions);
-        mesh.insert_attribute(Mesh::ATTRIBUTE_NORMAL, normals);
-        mesh.insert_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
-        mesh.insert_attribute(Mesh::ATTRIBUTE_COLOR, colors);
-
-        commands
-            .spawn(ColorMesh2dBundle {
-                mesh: Mesh2dHandle(meshes.add(mesh)),
-                material: materials.add(ColorMaterial {
-                    color: Color::WHITE,
-                    texture: None,
-                }),
-                ..Default::default()
-            })
-            .insert(DebugDrawObject);
+        merged_mesh.merge_with(&debug_render_mesh);
     }
+
+    let DebugDrawMesh { vertices, indices } = merged_mesh;
+
+    let mut mesh = Mesh::new(PrimitiveTopology::TriangleList);
+
+    let mut positions: Vec<[f32; 3]> = vec![];
+    let mut normals: Vec<[f32; 3]> = vec![];
+    let mut uvs: Vec<[f32; 2]> = vec![];
+    let mut colors: Vec<[f32; 4]> = vec![];
+
+    for vertex in vertices.iter() {
+        positions.push([vertex.position.x, vertex.position.y, 1.]);
+        normals.push([0., 0., 0.]);
+        uvs.push([0., 0.]);
+        colors.push([
+            vertex.color.r(),
+            vertex.color.g(),
+            vertex.color.b(),
+            vertex.color.a(),
+        ]);
+    }
+
+    mesh.set_indices(Some(Indices::U32(indices)));
+    mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, positions);
+    mesh.insert_attribute(Mesh::ATTRIBUTE_NORMAL, normals);
+    mesh.insert_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
+    mesh.insert_attribute(Mesh::ATTRIBUTE_COLOR, colors);
+
+    commands
+        .spawn(ColorMesh2dBundle {
+            mesh: Mesh2dHandle(meshes.add(mesh)),
+            material: materials.add(ColorMaterial {
+                color: Color::WHITE,
+                texture: None,
+            }),
+            ..Default::default()
+        })
+        .insert(DebugDrawObject);
 }
 
 mod circle;

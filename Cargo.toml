@@ -8,3 +8,4 @@ bevy = { version = "0.9", default-features = false, features = [ "render", "bevy
 
 [dev-dependencies]
 bevy = { version = "0.9", default-features = true }
+rand = "0.8"
