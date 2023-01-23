@@ -119,6 +119,7 @@ fn debug_renderer(
                 color: Color::WHITE,
                 texture: None,
             }),
+            transform: Transform::from_xyz(0., 0., 1.),
             ..Default::default()
         })
         .insert(DebugDrawObject);
