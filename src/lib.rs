@@ -128,9 +128,11 @@ fn debug_renderer(
 mod circle;
 mod line;
 mod rectangle;
+mod triangle;
 
 pub use circle::*;
 pub use line::*;
 pub use rectangle::*;
+pub use triangle::*;
 
 pub mod prelude;
