@@ -3,13 +3,13 @@ use bevy::prelude::*;
 use crate::{DebugDrawDrawable, DebugDrawMesh, DebugDrawVertex};
 
 #[derive(Clone, Copy, Debug)]
-pub struct DebugDrawTriangle {
+pub struct DebugTriangle {
     pub points: [Vec2; 3],
     pub color: Color,
     pub depth: f32,
 }
 
-impl Default for DebugDrawTriangle {
+impl Default for DebugTriangle {
     fn default() -> Self {
         Self {
             points: [Vec2::ZERO, Vec2::ZERO, Vec2::ZERO],
@@ -19,7 +19,7 @@ impl Default for DebugDrawTriangle {
     }
 }
 
-impl DebugDrawDrawable for DebugDrawTriangle {
+impl DebugDrawDrawable for DebugTriangle {
     fn to_mesh(&self) -> DebugDrawMesh {
         let a = self.points[0];
         let b = self.points[1];

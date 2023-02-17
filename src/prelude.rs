@@ -1,4 +1,4 @@
 pub use crate::{
-    DebugDraw, DebugDrawCircle, DebugDrawLine, DebugDrawMesh, DebugDrawPlugin, DebugDrawRectangle,
-    DebugDrawTriangle, DebugDrawVertex,
+    DebugCircle, DebugDraw, DebugDrawMesh, DebugDrawPlugin, DebugDrawVertex, DebugLine,
+    DebugRectangle, DebugTriangle,
 };

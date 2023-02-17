@@ -49,7 +49,7 @@ impl Default for Draw {
     }
 }
 
-fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<Time>) {
+fn draw(mut local: Local<Draw>, mut debug_draw: ResMut<DebugDraw>, time: Res<Time>) {
     for particle in local.particles.iter_mut() {
         particle.position += particle.velocity * time.delta_seconds();
         if particle.position.x < WINDOW_WIDTH * -0.5 {
@@ -66,7 +66,7 @@ fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<T
         }
     }
     for particle in local.particles.iter() {
-        debug_render.draw(DebugDrawCircle {
+        debug_draw.draw(DebugCircle {
             position: particle.position,
             radius: 2.,
             segments: 8,
@@ -80,7 +80,7 @@ fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<T
             if strength > 0. {
                 strength = strength.powf(4.);
                 let color = Color::rgba(1., 1., 1., strength);
-                debug_render.draw(DebugDrawLine {
+                debug_draw.draw(DebugLine {
                     from: particle.position,
                     to: other_particle.position,
                     color: color.into(),

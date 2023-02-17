@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::{DebugDrawDrawable, DebugDrawMesh, DebugDrawVertex};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct DebugDrawLine {
+pub struct DebugLine {
     pub from: Vec2,
     pub to: Vec2,
     pub color: DebugLineColor,
@@ -11,7 +11,7 @@ pub struct DebugDrawLine {
     pub depth: f32,
 }
 
-impl Default for DebugDrawLine {
+impl Default for DebugLine {
     fn default() -> Self {
         Self {
             from: Vec2::ZERO,
@@ -41,7 +41,7 @@ impl From<Color> for DebugLineColor {
     }
 }
 
-impl DebugDrawDrawable for DebugDrawLine {
+impl DebugDrawDrawable for DebugLine {
     fn to_mesh(&self) -> DebugDrawMesh {
         if self.from == self.to {
             DebugDrawMesh::new()

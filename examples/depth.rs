@@ -30,11 +30,11 @@ fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }
 
-fn draw(mut debug_render: ResMut<DebugDraw>, traveler_query: Query<(&Traveler, &Transform)>) {
+fn draw(mut debug_draw: ResMut<DebugDraw>, traveler_query: Query<(&Traveler, &Transform)>) {
     for (traveler, traveler_transform) in traveler_query.iter() {
         let bounce = Vec2::new(0., 10.) * (traveler.time_to_live * 6.).cos().abs();
         let rotation = PI * 0.03 * (traveler.time_to_live * 6.).cos();
-        debug_render.draw(DebugDrawRectangle {
+        debug_draw.draw(DebugRectangle {
             position: traveler_transform.translation.truncate() + bounce,
             size: Vec2::splat(100.),
             color: traveler.color,

@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use crate::{DebugDrawDrawable, DebugDrawMesh, DebugDrawVertex};
 
 #[derive(Clone, Copy, Debug)]
-pub struct DebugDrawCircle {
+pub struct DebugCircle {
     pub position: Vec2,
     pub radius: f32,
     pub segments: u8,
@@ -14,7 +14,7 @@ pub struct DebugDrawCircle {
     pub depth: f32,
 }
 
-impl Default for DebugDrawCircle {
+impl Default for DebugCircle {
     fn default() -> Self {
         Self {
             position: Vec2::ZERO,
@@ -27,7 +27,7 @@ impl Default for DebugDrawCircle {
     }
 }
 
-impl DebugDrawDrawable for DebugDrawCircle {
+impl DebugDrawDrawable for DebugCircle {
     fn to_mesh(&self) -> DebugDrawMesh {
         let mut vertices = vec![];
         let mut indices = vec![];

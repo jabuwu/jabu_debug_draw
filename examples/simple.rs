@@ -16,7 +16,7 @@ fn setup(mut commands: Commands) {
 }
 
 fn draw(mut debug_draw: ResMut<DebugDraw>) {
-    debug_draw.draw(DebugDrawLine {
+    debug_draw.draw(DebugLine {
         from: Vec2::new(-50., -50.),
         to: Vec2::new(50., 50.),
         thickness: 3.,
@@ -24,14 +24,14 @@ fn draw(mut debug_draw: ResMut<DebugDraw>) {
         ..Default::default()
     });
 
-    debug_draw.draw(DebugDrawRectangle {
+    debug_draw.draw(DebugRectangle {
         position: Vec2::new(-200., 0.),
         size: Vec2::new(100., 100.),
         color: Color::WHITE,
         ..Default::default()
     });
 
-    debug_draw.draw(DebugDrawCircle {
+    debug_draw.draw(DebugCircle {
         position: Vec2::new(200., 0.),
         radius: 100.,
         color: Color::WHITE,

@@ -24,10 +24,10 @@ struct Draw {
     circle_rotation: f32,
 }
 
-fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<Time>) {
+fn draw(mut local: Local<Draw>, mut debug_draw: ResMut<DebugDraw>, time: Res<Time>) {
     const LINES_START: Vec2 = Vec2::new(-300., 0.);
     for angle in -10..=10 {
-        debug_render.draw(DebugDrawLine {
+        debug_draw.draw(DebugLine {
             from: LINES_START,
             to: LINES_START
                 + Vec2::from_angle(local.lines_rotation + angle as f32 * PI * 0.1)
@@ -44,7 +44,7 @@ fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<T
         50. + (local.rectangle_rotation / 4.).sin() * 20.,
         100. + (local.rectangle_rotation / 8.).cos() * 20.,
     );
-    debug_render.draw(DebugDrawRectangle {
+    debug_draw.draw(DebugRectangle {
         position: RECTANGLE_POSITION,
         size: rectangle_size,
         color: Color::WHITE,
@@ -60,7 +60,7 @@ fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<T
         let angle = Vec2::from_angle(i as f32 * FRAC_PI_2 + local.rectangle_rotation);
         let offset = RECTANGLE_POSITION + angle * distance * 0.5 + angle * 10.;
         let perp = angle.perp();
-        debug_render.draw(DebugDrawLine {
+        debug_draw.draw(DebugLine {
             from: offset + perp * line_size * 0.5,
             to: offset - perp * line_size * 0.5,
             thickness: 2.,
@@ -70,7 +70,7 @@ fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<T
     }
     local.rectangle_rotation += time.delta_seconds() * 2.;
 
-    debug_render.draw(DebugDrawCircle {
+    debug_draw.draw(DebugCircle {
         position: Vec2::new(0., local.circle_rotation.sin() * 50.),
         radius: 100.,
         segments: 3 + (30. + (local.circle_rotation.sin() * 30.)) as u8,

@@ -23,7 +23,7 @@ struct Draw {
     count: f32,
 }
 
-fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<Time>) {
+fn draw(mut local: Local<Draw>, mut debug_draw: ResMut<DebugDraw>, time: Res<Time>) {
     let mut rng = StdRng::from_seed(Default::default());
     local.count += time.delta_seconds() * 30.;
     for index in 0..(local.count as usize) {
@@ -41,7 +41,7 @@ fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<T
         let offset3 = Vec2::from_angle(angle3).rotate(Vec2::X * distance3);
         let hue = rng.gen_range(0.0..360.0);
         let intensity = 1. - ((local.count - index as f32) / 200.).clamp(0., 1.);
-        debug_render.draw(DebugDrawTriangle {
+        debug_draw.draw(DebugTriangle {
             points: [origin + offset1, origin + offset2, origin + offset3],
             color: Color::hsl(hue, 0.8 * intensity, 0.6 * intensity),
             ..Default::default()
