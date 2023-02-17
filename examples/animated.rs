@@ -28,13 +28,12 @@ fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<T
     const LINES_START: Vec2 = Vec2::new(-300., 0.);
     for angle in -10..=10 {
         debug_render.draw(DebugDrawLine {
-            start: LINES_START,
-            end: LINES_START
+            from: LINES_START,
+            to: LINES_START
                 + Vec2::from_angle(local.lines_rotation + angle as f32 * PI * 0.1)
                     .rotate(Vec2::new(100., 0.)),
             thickness: 3.,
-            start_color: Color::RED,
-            end_color: Color::RED,
+            color: Color::RED.into(),
             ..Default::default()
         });
     }
@@ -62,11 +61,10 @@ fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<T
         let offset = RECTANGLE_POSITION + angle * distance * 0.5 + angle * 10.;
         let perp = angle.perp();
         debug_render.draw(DebugDrawLine {
-            start: offset + perp * line_size * 0.5,
-            end: offset - perp * line_size * 0.5,
+            from: offset + perp * line_size * 0.5,
+            to: offset - perp * line_size * 0.5,
             thickness: 2.,
-            start_color: Color::WHITE,
-            end_color: Color::WHITE,
+            color: Color::WHITE.into(),
             ..Default::default()
         });
     }

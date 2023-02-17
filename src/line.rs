@@ -2,12 +2,11 @@ use bevy::prelude::*;
 
 use crate::{DebugDrawDrawable, DebugDrawMesh, DebugDrawVertex};
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct DebugDrawLine {
-    pub start: Vec2,
-    pub end: Vec2,
-    pub start_color: Color,
-    pub end_color: Color,
+    pub from: Vec2,
+    pub to: Vec2,
+    pub color: DebugLineColor,
     pub thickness: f32,
     pub depth: f32,
 }
@@ -15,39 +14,60 @@ pub struct DebugDrawLine {
 impl Default for DebugDrawLine {
     fn default() -> Self {
         Self {
-            start: Vec2::ZERO,
-            end: Vec2::ZERO,
-            start_color: Color::BLACK,
-            end_color: Color::BLACK,
+            from: Vec2::ZERO,
+            to: Vec2::ZERO,
+            color: DebugLineColor::Solid(Color::BLACK),
             thickness: 1.,
             depth: 0.,
         }
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum DebugLineColor {
+    Solid(Color),
+    Gradient(Color, Color),
+}
+
+impl Default for DebugLineColor {
+    fn default() -> Self {
+        Self::Solid(Color::BLACK)
+    }
+}
+
+impl From<Color> for DebugLineColor {
+    fn from(value: Color) -> Self {
+        DebugLineColor::Solid(value)
+    }
+}
+
 impl DebugDrawDrawable for DebugDrawLine {
     fn to_mesh(&self) -> DebugDrawMesh {
-        if self.start == self.end {
+        if self.from == self.to {
             DebugDrawMesh::new()
         } else {
-            let orthogonal = (self.start - self.end).normalize().perp() * self.thickness * 0.5;
+            let orthogonal = (self.from - self.to).normalize().perp() * self.thickness * 0.5;
+            let (from_color, to_color) = match self.color {
+                DebugLineColor::Solid(color) => (color, color),
+                DebugLineColor::Gradient(from_color, to_color) => (from_color, to_color),
+            };
             DebugDrawMesh {
                 vertices: vec![
                     DebugDrawVertex {
-                        position: self.start - orthogonal,
-                        color: self.start_color,
+                        position: self.from - orthogonal,
+                        color: from_color,
                     },
                     DebugDrawVertex {
-                        position: self.start + orthogonal,
-                        color: self.start_color,
+                        position: self.from + orthogonal,
+                        color: from_color,
                     },
                     DebugDrawVertex {
-                        position: self.end - orthogonal,
-                        color: self.end_color,
+                        position: self.to - orthogonal,
+                        color: to_color,
                     },
                     DebugDrawVertex {
-                        position: self.end + orthogonal,
-                        color: self.end_color,
+                        position: self.to + orthogonal,
+                        color: to_color,
                     },
                 ],
                 indices: vec![0, 1, 2, 3, 2, 1],

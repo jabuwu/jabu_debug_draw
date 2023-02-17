@@ -15,24 +15,23 @@ fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }
 
-fn draw(mut debug_render: ResMut<DebugDraw>) {
-    debug_render.draw(DebugDrawLine {
-        start: Vec2::new(-50., -50.),
-        end: Vec2::new(50., 50.),
+fn draw(mut debug_draw: ResMut<DebugDraw>) {
+    debug_draw.draw(DebugDrawLine {
+        from: Vec2::new(-50., -50.),
+        to: Vec2::new(50., 50.),
         thickness: 3.,
-        start_color: Color::WHITE,
-        end_color: Color::WHITE,
+        color: Color::WHITE.into(),
         ..Default::default()
     });
 
-    debug_render.draw(DebugDrawRectangle {
+    debug_draw.draw(DebugDrawRectangle {
         position: Vec2::new(-200., 0.),
         size: Vec2::new(100., 100.),
         color: Color::WHITE,
         ..Default::default()
     });
 
-    debug_render.draw(DebugDrawCircle {
+    debug_draw.draw(DebugDrawCircle {
         position: Vec2::new(200., 0.),
         radius: 100.,
         color: Color::WHITE,

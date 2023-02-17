@@ -49,6 +49,7 @@ impl DebugDrawMesh {
     pub fn merge_with(&mut self, other: &DebugDrawMesh) {
         let base_index = self.vertices.len() as u32;
         self.vertices.extend(other.vertices.iter());
+        self.indices.reserve(other.indices.len());
         for index in other.indices.iter() {
             self.indices.push(base_index + *index);
         }

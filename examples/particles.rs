@@ -81,10 +81,9 @@ fn draw(mut local: Local<Draw>, mut debug_render: ResMut<DebugDraw>, time: Res<T
                 strength = strength.powf(4.);
                 let color = Color::rgba(1., 1., 1., strength);
                 debug_render.draw(DebugDrawLine {
-                    start: particle.position,
-                    end: other_particle.position,
-                    start_color: color,
-                    end_color: color,
+                    from: particle.position,
+                    to: other_particle.position,
+                    color: color.into(),
                     ..Default::default()
                 });
             }
