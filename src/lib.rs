@@ -41,6 +41,12 @@ pub struct DebugDrawMesh {
     pub depth: f32,
 }
 
+impl DebugDrawDrawable for DebugDrawMesh {
+    fn to_mesh(&self) -> DebugDrawMesh {
+        self.clone()
+    }
+}
+
 impl DebugDrawMesh {
     pub fn new() -> Self {
         Self::default()
@@ -56,7 +62,7 @@ impl DebugDrawMesh {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Default, Debug, Clone, Copy)]
 pub struct DebugDrawVertex {
     pub position: Vec2,
     pub color: Color,
@@ -129,11 +135,13 @@ fn debug_renderer(
 mod circle;
 mod line;
 mod rectangle;
+mod text;
 mod triangle;
 
 pub use circle::*;
 pub use line::*;
 pub use rectangle::*;
+pub use text::*;
 pub use triangle::*;
 
 pub mod prelude;

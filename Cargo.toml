@@ -5,6 +5,9 @@ edition = "2021"
 
 [dependencies]
 bevy = { version = "0.9", default-features = false, features = [ "render", "bevy_asset" ] }
+ttf2mesh_triangulation = { git = "https://github.com/jabuwu/ttf2mesh_triangulation", rev = "7595c725208b03cf218244724d91e64f71d49678" }
+ttf-parser = "0.18"
+lazy_static = "1.4"
 
 [dev-dependencies]
 bevy = { version = "0.9", default-features = true }
