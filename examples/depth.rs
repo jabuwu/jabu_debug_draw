@@ -7,15 +7,30 @@ use rand::prelude::*;
 const WINDOW_WIDTH: f32 = 1480.;
 const WINDOW_HEIGHT: f32 = 820.;
 
+#[derive(Debug, Hash, PartialEq, Eq, Clone, Copy, SystemSet)]
+pub enum ExampleSystem {
+    Draw,
+    TravelerUpdate,
+    TravelerSpawn,
+}
+
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::rgb(0.1, 0.1, 0.1)))
         .add_plugins(DefaultPlugins)
         .add_plugin(DebugDrawPlugin)
         .add_startup_system(setup)
-        .add_system(draw.label("draw"))
-        .add_system(traveler_update.label("traveler_update").before("draw"))
-        .add_system(traveler_spawn.before("traveler_update"))
+        .add_system(draw.in_set(ExampleSystem::Draw))
+        .add_system(
+            traveler_update
+                .in_set(ExampleSystem::TravelerUpdate)
+                .before(ExampleSystem::Draw),
+        )
+        .add_system(
+            traveler_spawn
+                .in_set(ExampleSystem::TravelerSpawn)
+                .before(ExampleSystem::TravelerUpdate),
+        )
         .run();
 }
 

@@ -19,7 +19,7 @@ const INVERSE_RESOLUTION: f32 = 1. / (RESOLUTION as f32);
 
 #[derive(Clone)]
 struct Glyph {
-    triangles: Vec<[Vec2; 3]>,
+    triangles: Vec<[[f32; 2]; 3]>,
     horizontal_advance: u16,
 }
 
@@ -151,17 +151,17 @@ impl DebugDrawDrawable for DebugText {
                     for triangle in glyph.triangles.iter() {
                         indices.push(vertices.len() as u32);
                         vertices.push(DebugDrawVertex {
-                            position: position + triangle[0] * scale,
+                            position: position + Vec2::from(triangle[0]) * scale,
                             color: self.color,
                         });
                         indices.push(vertices.len() as u32);
                         vertices.push(DebugDrawVertex {
-                            position: position + triangle[1] * scale,
+                            position: position + Vec2::from(triangle[1]) * scale,
                             color: self.color,
                         });
                         indices.push(vertices.len() as u32);
                         vertices.push(DebugDrawVertex {
-                            position: position + triangle[2] * scale,
+                            position: position + Vec2::from(triangle[2]) * scale,
                             color: self.color,
                         });
                     }
@@ -189,7 +189,7 @@ impl DebugDrawDrawable for DebugText {
 
 #[derive(Default)]
 struct TriangulatorBuilder {
-    contour: Vec<Vec2>,
+    contour: Vec<[f32; 2]>,
     triangulator: Triangulator,
     has_contours: bool,
 }
@@ -197,20 +197,20 @@ struct TriangulatorBuilder {
 impl ttf_parser::OutlineBuilder for TriangulatorBuilder {
     fn move_to(&mut self, x: f32, y: f32) {
         if self.contour.len() > 0 {
-            self.triangulator.add_contour(0, take(&mut self.contour));
+            let _ = self.triangulator.add_contour(0, take(&mut self.contour));
             self.contour = Vec::new();
             self.has_contours = true;
         }
-        self.contour.push(Vec2::new(x, y));
+        self.contour.push([x, y]);
     }
 
     fn line_to(&mut self, x: f32, y: f32) {
-        self.contour.push(Vec2::new(x, y));
+        self.contour.push([x, y]);
     }
 
     fn quad_to(&mut self, x1: f32, y1: f32, x: f32, y: f32) {
         if let Some(last) = self.contour.last() {
-            let mut p0 = *last;
+            let mut p0 = Vec2::from(*last);
             let mut p1 = Vec2::new(x1, y1);
             let p2 = Vec2::new(x, y);
             let d01 = (p1 - p0) * INVERSE_RESOLUTION;
@@ -219,22 +219,22 @@ impl ttf_parser::OutlineBuilder for TriangulatorBuilder {
                 p0 += d01;
                 p1 += d12;
                 let cp = p0 + (p1 - p0) * (i as f32) * INVERSE_RESOLUTION;
-                self.contour.push(cp);
+                self.contour.push([cp.x, cp.y]);
             }
-            self.contour.push(Vec2::new(x, y));
+            self.contour.push([x, y]);
         } else {
-            self.contour.push(Vec2::new(x, y));
+            self.contour.push([x, y]);
         }
     }
 
     fn curve_to(&mut self, _x1: f32, _y1: f32, _x2: f32, _y2: f32, x: f32, y: f32) {
         // TODO
-        self.contour.push(Vec2::new(x, y));
+        self.contour.push([x, y]);
     }
 
     fn close(&mut self) {
         if self.contour.len() > 0 {
-            self.triangulator.add_contour(0, take(&mut self.contour));
+            let _ = self.triangulator.add_contour(0, take(&mut self.contour));
             self.contour = Vec::new();
             self.has_contours = true;
         }

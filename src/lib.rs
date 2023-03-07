@@ -6,16 +6,21 @@ use bevy::{
     sprite::Mesh2dHandle,
 };
 
-pub struct DebugDrawPlugin;
+#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
+#[system_set(base)]
+pub struct DebugDrawSystem;
 
-#[derive(Debug, Hash, PartialEq, Eq, Clone, StageLabel)]
-pub struct DebugDrawStage;
+pub struct DebugDrawPlugin;
 
 impl Plugin for DebugDrawPlugin {
     fn build(&self, app: &mut App) {
-        app.add_stage_after(CoreStage::Update, DebugDrawStage, SystemStage::parallel())
-            .init_resource::<DebugDraw>()
-            .add_system_to_stage(DebugDrawStage, debug_renderer);
+        app.init_resource::<DebugDraw>()
+            .configure_set(
+                DebugDrawSystem
+                    .after(CoreSet::Update)
+                    .before(CoreSet::UpdateFlush),
+            )
+            .add_system(debug_renderer.in_base_set(DebugDrawSystem));
     }
 }
 
